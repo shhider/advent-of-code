@@ -4,4 +4,4 @@
 
 👋 Hi, there~
 
-My colleagues launched this AdventOfCode challenge. And I choose to code in Rust, because I started learning Rust these days~
+One of my colleagues found this interesting event, and launched this challenge in the team. And I choose to complete in Rust, because I started learning Rust these days~
