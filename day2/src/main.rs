@@ -6,10 +6,11 @@ const INPUT_FILE: &str = "./input.txt";
 fn main() {
   // try temp input
   let mut temp = Calculator::new();
-  temp = temp.add_round("A", "Y");
-  temp = temp.add_round("B", "X");
-  temp = temp.add_round("C", "Z");
-  println!("temp score: {}", temp.get_score());
+  temp.add_round("A", "Y");
+  temp.add_round("B", "X");
+  temp.add_round("C", "Z");
+  println!("① temp score: {}", temp.get_score());
+  println!("② temp score predictable: {}", temp.get_score_predicted());
 
   // the test input
   let ipt_file = fs::File::open(INPUT_FILE).expect("invalid input file");
@@ -21,30 +22,42 @@ fn main() {
       let shapes: Vec<&str> = ll.trim().split(" ").collect();
       let oppo = shapes.get(0).expect("first shape should be existed");
       let me = shapes.get(1).expect("second shape should be existed");
-      calc = calc.add_round(oppo, me);
+      calc.add_round(oppo, me);
     }
   }
 
-  println!("my score: {}", calc.get_score());
+  println!("① my score: {}", calc.get_score());
+  println!("② my score predictable: {}", calc.get_score_predicted());
 }
 
 struct Calculator {
   value: u32,
+  value_predicted: u32,
 }
 
 impl Calculator {
   fn new() -> Calculator {
-    Self { value: 0 }
+    Self {
+      value: 0,
+      value_predicted: 0,
+    }
   }
 
-  fn add_round(mut self, oppo: &str, me: &str) -> Self {
+  fn add_round(&mut self, oppo: &str, me: &str) {
     self.value += get_score_of_shape(me);
     self.value += get_score_of_outcome(oppo, me);
-    self
+
+    let me_should_be = predict_shape(oppo, me);
+    self.value_predicted += get_score_of_shape(me_should_be);
+    self.value_predicted += get_score_of_outcome(oppo, me_should_be);
   }
 
-  fn get_score(self) -> u32 {
+  fn get_score(&self) -> u32 {
     self.value
+  }
+
+  fn get_score_predicted(&self) -> u32 {
+    self.value_predicted
   }
 }
 
@@ -69,4 +82,30 @@ fn get_score_of_outcome(oppo: &str, me: &str) -> u32 {
   }
 
   0
+}
+
+fn predict_shape<'a>(oppo: &str, outcome: &str) -> &'a str {
+  // lose
+  if outcome == "X" {
+    if oppo == "A" { return "Z"; }
+    else if oppo == "B" { return "X"; }
+    else if oppo == "C" { return "Y"; }
+    return "";
+  }
+
+  // draw
+  if outcome == "Y" {
+    if oppo == "A" { return "X"; }
+    else if oppo == "B" { return "Y"; }
+    else if oppo == "C" { return "Z"; }
+    return "";
+  }
+
+  // win
+  if outcome == "Z" {
+    if oppo == "A" { return "Y"; }
+    else if oppo == "B" { return "Z"; }
+    else if oppo == "C" { return "X"; }
+  }
+  return "";
 }
