@@ -12,20 +12,31 @@ fn main() {
   ];
   let eggg = eg.iter().map(|&x| x).map(|x| String::from(x)).collect();
 
-  deal_list(&eggg);
-  deal_list(&get_input());
+  part1_solve(&eggg);
+  part1_solve(&get_input());
 }
 
-fn deal_list(list: &Vec<String>) -> u32 {
+// #region Part2
+fn part2_solve(list: &Vec<String>) -> u32 {
+  // let group: [String: 3]
+}
+
+fn part2_deal_rucksack_group() -> u32 {
+  //
+}
+// #endregion
+
+// #region Part1
+fn part1_solve(list: &Vec<String>) -> u32 {
   let sum = list.iter()
-    .map(|x| deal_rucksack(&x))
+    .map(|x| part1_deal_rucksack(&x))
     .sum();
 
   println!("sum: {sum}");
   sum
 }
 
-fn deal_rucksack(rucksack: &String) -> u32 {
+fn part1_deal_rucksack(rucksack: &String) -> u32 {
   let mut chars: Vec<char> = rucksack.chars().collect();
   let len = chars.len();
   let half = len / 2;
@@ -46,6 +57,7 @@ fn deal_rucksack(rucksack: &String) -> u32 {
 
   result.iter().map(|i| letter_to_num(&i)).sum()
 }
+// #endregion
 
 fn letter_to_num(letter: &char) -> u32 {
   // println!("letter {letter}");
